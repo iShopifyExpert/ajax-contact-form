@@ -1,0 +1,23 @@
+var $contact_form = $('.newsletter .contact-form');
+  $contact_form.each(function() {
+    var $cf = $(this);
+    $cf.on('submit', function (e) {
+      if($('input[name="challenge"]', $cf).val() !== "true") {
+        $.ajax({
+          type: $cf.attr('method'),
+          url: $cf.attr('action'),
+          data: $cf.serialize(),
+          success: function (data) {
+            $cf.fadeOut("slow", function(){
+              $cf.before('<p class="message">' + {{ 'general.newsletter_form.success_text' | t | json }} + '</p>');
+            });
+          },
+          error: function(data) {
+          	$('input[name="challenge"]', $cf).val('true');
+          	$cf.submit();
+          }
+        });
+        e.preventDefault();
+      }
+    });
+  });
